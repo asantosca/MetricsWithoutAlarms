@@ -1,10 +1,10 @@
 import boto3
 
-# Create CloudWatch client
+# Lists metrics that have no alarms
+
 cloudwatch = boto3.client('cloudwatch')
 limit=10
-ourmetrics = {""}
-# List metrics through the pagination interface
+
 paginator = cloudwatch.get_paginator('list_metrics')
 for response in paginator.paginate():
     for metric in response['Metrics']:
@@ -14,6 +14,5 @@ for response in paginator.paginate():
                 MetricName = metric['MetricName'],
                 Namespace = metric['Namespace'])
                 
-            # print(target)
-            if ('MetricAlarms' in target):
+            if (('MetricAlarms' in target) and len(target['MetricAlarms']) == 0):
                 print(metric['Namespace'] + "->" + metric['MetricName'])
